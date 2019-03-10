@@ -1,0 +1,10 @@
+comment: 0;3
+print: 0;31
+import: 0;31
+for: 0;31
+while: 0;31
+special: 0;32
+condition: 0;31
+variable: 0;94
+number: 0;32
+tryExcept: 0;31

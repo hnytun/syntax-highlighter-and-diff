@@ -1,0 +1,121 @@
+\documentclass[a4paper]{article}
+
+% Import some useful packages
+\usepackage[margin=0.5in]{geometry} % narrow margins
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{minted, parskip}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\definecolor{LightGray}{gray}{0.95}
+
+\title{Peer-review of assignment 5 for \textit{INF3331-henrijn}}
+\author{Neringa Altanaite, neringaa, {neringaa@uio.no} \\
+ 		Nicolai August Hagen, nicolhag, {nicolhag@uio.no} \\
+		Vegard Lilloe Svendsen, vegardls, {vegardls@uio.no}}
+
+\begin{document}
+\maketitle
+
+\section{Review \emph{- to be filled out}}\label{sec:review}
+
+\textbf{Python version and operating system used:}
+
+Mac OS X with Python 3.5.2
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{General feedback}
+In general we find your solution good. You have good documentation of your solution, and use good variable and function names. Some parts of your solution seem a bit complicated, but works as expected. 
+
+Some of the lines in your programs, especially docstrings are too long, and should preferably be split into multiple lines. It would also have been nice if you had supplied a README-file to help testing your code. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.1: Syntax highlighting}
+
+Very good and thorough documentation of your solution, and nice variable and function names. The docstrings are especially useful. Nice! In your program, it would have been nice to supply a -h option for command line usage for help on how to run your program.
+
+The part where you extract the content of the regex-files and theme-files is a bit more complicated than necessary. For example, your function \texttt{getColorDictionary()} could have been re-written as:
+
+\begin{minted}[bgcolor=LightGray, linenos, fontsize=\footnotesize]{python}
+syntax_file = (open(sys.argv[1])).read()
+syntax_values = re.findall(r'"(.+?)":', syntax_file)
+syntax_keys = re.findall(r": (.+)", syntax_file)
+syntax = dict(zip(syntax_keys, syntax_values))
+\end{minted}
+
+Here, the built-in \texttt{re.findall()}-function, along with group extractions in the regex makes a list of tuples - which again can be translated into a python dictionary. The same logic can also be applied to the regex-file. 
+
+In your solution, you do not handle overlapping of coloring - which makes it necessary for you to check that a potential highlighting is not inside another potential highlighting (e.g., in the \texttt{python.syntax}-file where you check that import do not come after a \# for comments). Because of this, some of the regexes will not always be correct. For example, consider adding the following comment at line NO. 9 in your program:
+
+\begin{minted}[bgcolor=LightGray, fontsize=\footnotesize]{python}
+# set to True if value is found
+\end{minted}
+
+\textbf{Programming parts not answered:}
+\begin{itemize}
+  \item Overlapping coloring
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.2: Python syntax} \label{sec:assignment5.2}
+You have colored 10 different pieces of Python code - good.
+
+Nice, most of the regexes work as expected! You correctly color the \texttt{import}-statements, but here I also miss the three other possible "spellings" of \texttt{imports}:
+
+\begin{minted}[bgcolor=LightGray, fontsize=\footnotesize]{python}
+import matplotlib.pyplot as plt
+from matplotlib import colors
+from matplotlib import colors as cs
+\end{minted}
+
+This could have been corrected by adding \texttt{from} and \texttt{as} inside the regexes, also taking into account that they actually occur on the import-lines:
+
+\begin{minted}[bgcolor=LightGray, fontsize=\footnotesize]{python}
+((?:^|\n)import\w*|(?:^|\n)from\w*|(?:^|(?:\w*)import(?:\w*))|as(?= \w*\n))
+\end{minted}
+
+Another problem with your solution is that "variables" will not always be colored correctly. Consider the code below:
+
+\begin{minted}[bgcolor=LightGray, fontsize=\footnotesize]{python}
+grid[grid == 0] = max_escape_time
+\end{minted}
+
+To support this, you could have used negative lookahead and/or negative lookbehind, checking that the character in from or in behind is not \texttt{=}. We find the following article useful:  \underline{\href{http://www.regular-expressions.info/lookaround.html}{lookarounds}}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.3: Syntax for your favorite language}
+You have colored 10 different pieces of Java code - good.
+
+When coloring different datatypes, we're missing the Java datatypes \texttt{short}, \texttt{long}, \texttt{float}, \texttt{char}, \texttt{byte}. 
+
+Also, your regex for \texttt{class} will also highlight inside e.g. variable-name. Consider adding the following line to your program:
+
+\begin{minted}[bgcolor=LightGray, fontsize=\footnotesize]{python}
+private double classOfStudents = 0;
+\end{minted}
+
+This can be handled by checking that \texttt{class} is at the beginning of a line, possibly "prefixed" by private or public.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.4: Syntax for your second favorite language}
+Not implemented. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.5: superdiff}
+Very well documented with comments and docstrings!
+
+Nice, your program works as expected when first file is (A, B, C, D, E, F) and second file is (B, C, D, E, F, G). Very good! Some parts of the program seem a bit complicated, but works as expected when run. We would recommend avoiding the use of \texttt{while True}-loops and keeping the use of the \texttt{break}-keyword to a bare minimum, to increase readability of the code.
+
+In your program, we are missing handling of erroneous input (e.g., missing files given to the program).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection*{Assignment 5.6:  Coloring diff}
+
+The \texttt{diff.syntax}-file works as expected - very good!
+
+\bibliographystyle{plain}
+\bibliography{literature}
+
+\end{document}

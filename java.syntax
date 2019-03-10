@@ -1,0 +1,10 @@
+"class": class
+"println": println
+"System\..*\.": system
+"\b\d+\b": number
+"(\b(if|else\sif|else)\b)": condition
+"(\b(int|double|boolean|String|void)\b)": types
+"(\b(public|static)\b)": states
+"(\b(true|false|null)\b)": special
+"\w*\s?(?=(?<!=)=(?!=))": variable
+"main": main

@@ -1,0 +1,10 @@
+"#.*(?:$|\n)": comment
+"^(?!#)\s*\b(print)\b": print
+"^(?!#)\s*\b(import)\b": import
+"(^(?!#)\s*\bfor\.*)|\bin\b": for
+"^(?!#)\s*\b(while)\b": while
+"(\b(True|False|None)\b)": special
+"(\b(if|elif|else)\b)": condition
+"^(?!#)\s*\b.*(?=.*=)\b": variable
+"\b\d+\b": number
+"\b(try|except)\b" tryExcept
